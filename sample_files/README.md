@@ -7,6 +7,8 @@
 `docker run -it -v $(pwd):/app cs-abel-john-file-metadata:0.0.1`
 
 ***Test:***
+`docker run -it -v $(pwd):/app cs-abel-john-file-metadata:0.0.1 sh -c pytest`
+
 
 # Python vs Pyspark Solutions
 
