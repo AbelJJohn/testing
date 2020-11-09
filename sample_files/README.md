@@ -8,8 +8,6 @@
 
 ***Test:***
 `docker run -it -v $(pwd):/app cs-abel-john-file-metadata:0.0.1 sh -c pytest`
-
-
 # Python vs Pyspark Solutions
 
 I approached and solved this assignment in two separate ways: Pure python and Pyspark. Each have their own strengths and weaknesses. 
@@ -26,20 +24,20 @@ size of the files in bytes. The data process in the above statement takes O(N^2)
 be parallelized among multiple cores.
 
 The python space complexity is O(N) as each file is received as bytes from the python request for analysis. Pyspark uses Resilient Distributed Datasets 
-(RDDs)as its primary data structure. As such, the space complexity would be O(N/k) where k is the number of machines/cores in the cluster.
+(RDDs) as its primary data structure. As such, the space complexity would be O(N/k) where k is the number of machines/cores in the cluster.
 
 ## Docker Build Time
 ***Python:***
 The build process for the Python docker container is simple and straightforward. I use a basic python3.6.5-alpine3.7 image as the base, which is
-quite small and can spin up quite quickly. I would additionally need to install just two pip packages before the code can be run in the container.
+small and can spin up quickly. I need to install three pip packages before the code can be run in the container.
 The final docker image size is expected to be ~95MB.
 
 ***Pyspark:***
-The build process for the Pyspark container, however, is much more convoluted. Pyspark is built on Spark's Java API and uses py4J to initialize a
+The build process for the Pyspark container is complex. Pyspark is built on Spark's Java API and uses py4J to initialize a
 JVM for SparkContext. Spark requires JDK-8 to be in the file path. In order to accomodate all of these requirements, the dockerfile for the Pyspark
-solution is much more complicated. First, the base image is Ubuntu on which I install JDK-8 and Spark. Both of these installations are time intensive 
-as JDK-8 is ~100MB and Spark with Hadoop is ~150MB. This can take quite a long time to download so the container build time becomes extremely
-dependent on the network connection.  The final docker image is expected to be ~1.5GB which is FAR too large for a problem of this scale.
+solution is relatively more complicated than the python solution. The base image is Ubuntu, on which I install JDK-8 and Spark. Both of these installations are time intensive 
+as JDK-8 is ~100MB and Spark with Hadoop is ~150MB. This can take a long time to download so the container build time becomes
+dependent on the network connection.  The final docker image is expected to be ~1.5GB which is far too large for a problem of this scale.
 
 ## What about scale?
 Scale is the primary reason that I considered a Pyspark solution. The current requirements only have files that are <1MB each so the pure python
@@ -67,6 +65,9 @@ sample_file_ab2.txt = Renamed sample_file_0.txt
 
 sample_file_one.txt = One long word
 
+sample_file_small.txt = The first two lines from sample_file_0.txt
+
+
 ## Test Cases
 
 1. Checking data transmission accuracy. Since I am using requests to get the data from github, prove the data is accurate.
@@ -75,4 +76,4 @@ sample_file_one.txt = One long word
 
 3. Checking data availability. If requests fails to get a response due to network time out, either run the request again or log connection issue.
 
-4. Checking data quality. If a file is empty, one large word, or corrupt, ensure that the program will work as intended.
+4. Checking data quality. If a file is empty or one large word ensure that the logic  returns as the requirements specify.
