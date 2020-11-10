@@ -4,7 +4,7 @@
 `docker build -t cs-abel-john-file-metadata:0.0.1 .`
 
 ***Run:***
-`docker run -it -v $(pwd):/app cs-abel-john-file-metadata:0.0.1`
+`docker run -e TZ=America/Los_Angeles -it -v $(pwd):/app cs-abel-john-file-metadata:0.0.1`
 
 ***Test:***
 `docker run -it -v $(pwd):/app cs-abel-john-file-metadata:0.0.1 sh -c pytest`
@@ -74,6 +74,6 @@ sample_file_small.txt = The first two lines from sample_file_0.txt
 
 2. Checking input file naming style. The requirement wants metadata only from `sample_file_\*.txt`. Show that this is resolved in the code.
 
-3. Checking data availability. If requests fails to get a response due to network time out, either run the request again or log connection issue.
+3. Checking data availability. If requests fails to get a response due to network time out, run the request again or log the issue if the team has a monitoring system.
 
 4. Checking data quality. If a file is empty or one large word ensure that the logic  returns as the requirements specify.
